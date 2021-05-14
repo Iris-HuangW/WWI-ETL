@@ -1,0 +1,787 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "wideworldImporterDF"
+		},
+		"wwi_DW_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'wwi_DW'"
+		},
+		"wwi_ODS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'wwi_ODS'"
+		},
+		"wwi_OLTP_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'wwi_OLTP'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/sale_staging')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wwi_ODS",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ods"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Sale Staging Key",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "City Key",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Customer Key",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Bill To Customer Key",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Stock Item Key",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Invoice Date Key",
+						"type": "date"
+					},
+					{
+						"name": "Delivery Date Key",
+						"type": "date"
+					},
+					{
+						"name": "Salesperson Key",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WWI Invoice ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Description",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Package",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Quantity",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Unit Price",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "Tax Rate",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 3
+					},
+					{
+						"name": "Total Excluding Tax",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "Tax Amount",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "Profit",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "Total Including Tax",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "Total Dry Items",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Total Chiller Items",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WWI City ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WWI Customer ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WWI Bill To Customer ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WWI Stock Item ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WWI Salesperson ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last Modified When",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "Integration",
+					"table": "Sale_Staging"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/wwi_ODS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sales_customers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wwi_OLTP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "oltp"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CustomerName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BillToCustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CustomerCategoryID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BuyingGroupID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PrimaryContactPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AlternateContactPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DeliveryMethodID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DeliveryCityID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PostalCityID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CreditLimit",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "AccountOpenedDate",
+						"type": "date"
+					},
+					{
+						"name": "StandardDiscountPercentage",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 3
+					},
+					{
+						"name": "IsStatementSent",
+						"type": "bit"
+					},
+					{
+						"name": "IsOnCreditHold",
+						"type": "bit"
+					},
+					{
+						"name": "PaymentDays",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PhoneNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "FaxNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryRun",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RunPosition",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WebsiteURL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryAddressLine1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryAddressLine2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryPostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryLocation",
+						"type": "WideWorldImporters.sys.geography"
+					},
+					{
+						"name": "PostalAddressLine1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PostalAddressLine2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PostalPostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastEditedBy",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ValidFrom",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "ValidTo",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "Sales",
+					"table": "Customers"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/wwi_OLTP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sales_invoices')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wwi_OLTP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "oltp"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "InvoiceID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BillToCustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OrderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DeliveryMethodID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AccountsPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SalespersonPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PackedByPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "InvoiceDate",
+						"type": "date"
+					},
+					{
+						"name": "CustomerPurchaseOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IsCreditNote",
+						"type": "bit"
+					},
+					{
+						"name": "CreditNoteReason",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Comments",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryInstructions",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InternalComments",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TotalDryItems",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "TotalChillerItems",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DeliveryRun",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RunPosition",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ReturnedDeliveryData",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ConfirmedDeliveryTime",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "ConfirmedReceivedBy",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastEditedBy",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LastEditedWhen",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "Sales",
+					"table": "Invoices"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/wwi_OLTP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sales_orderlines')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wwi_OLTP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "oltp"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "OrderLineID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OrderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "StockItemID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Description",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PackageTypeID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Quantity",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "UnitPrice",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 2
+					},
+					{
+						"name": "TaxRate",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 3
+					},
+					{
+						"name": "PickedQuantity",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PickingCompletedWhen",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "LastEditedBy",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LastEditedWhen",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "Sales",
+					"table": "OrderLines"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/wwi_OLTP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sales_orders')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wwi_OLTP",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "oltp"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "OrderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CustomerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SalespersonPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "PickedByPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactPersonID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BackorderOrderID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OrderDate",
+						"type": "date"
+					},
+					{
+						"name": "ExpectedDeliveryDate",
+						"type": "date"
+					},
+					{
+						"name": "CustomerPurchaseOrderNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IsUndersupplyBackordered",
+						"type": "bit"
+					},
+					{
+						"name": "Comments",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeliveryInstructions",
+						"type": "nvarchar"
+					},
+					{
+						"name": "InternalComments",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PickingCompletedWhen",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "LastEditedBy",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LastEditedWhen",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "Sales",
+					"table": "Orders"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/wwi_OLTP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/wwi_DW')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('wwi_DW_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/wwi_ODS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('wwi_ODS_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/wwi_OLTP')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('wwi_OLTP_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_OLTP_ODS_ETL')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "sales_orders",
+								"type": "DatasetReference"
+							},
+							"name": "sourceSales"
+						},
+						{
+							"dataset": {
+								"referenceName": "sales_customers",
+								"type": "DatasetReference"
+							},
+							"name": "sourceCustomers"
+						},
+						{
+							"dataset": {
+								"referenceName": "sales_orderlines",
+								"type": "DatasetReference"
+							},
+							"name": "sourceOrderlines"
+						},
+						{
+							"dataset": {
+								"referenceName": "sales_invoices",
+								"type": "DatasetReference"
+							},
+							"name": "sourceInvoices"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "sale_staging",
+								"type": "DatasetReference"
+							},
+							"name": "sink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Filter"
+						},
+						{
+							"name": "Join1"
+						},
+						{
+							"name": "Join2"
+						},
+						{
+							"name": "Join3"
+						},
+						{
+							"name": "DerivedColumn1"
+						}
+					],
+					"script": "parameters{\n\tcutoff_time as string ('2000-01-01')\n}\nsource(output(\n\t\tOrderID as integer,\n\t\tCustomerID as integer,\n\t\tSalespersonPersonID as integer,\n\t\tPickedByPersonID as integer,\n\t\tContactPersonID as integer,\n\t\tBackorderOrderID as integer,\n\t\tOrderDate as date,\n\t\tExpectedDeliveryDate as date,\n\t\tCustomerPurchaseOrderNumber as string,\n\t\tIsUndersupplyBackordered as boolean,\n\t\tComments as string,\n\t\tDeliveryInstructions as string,\n\t\tInternalComments as string,\n\t\tPickingCompletedWhen as timestamp,\n\t\tLastEditedBy as integer,\n\t\tLastEditedWhen as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> sourceSales\nsource(output(\n\t\tCustomerID as integer,\n\t\tCustomerName as string,\n\t\tBillToCustomerID as integer,\n\t\tCustomerCategoryID as integer,\n\t\tBuyingGroupID as integer,\n\t\tPrimaryContactPersonID as integer,\n\t\tAlternateContactPersonID as integer,\n\t\tDeliveryMethodID as integer,\n\t\tDeliveryCityID as integer,\n\t\tPostalCityID as integer,\n\t\tCreditLimit as decimal(18,2),\n\t\tAccountOpenedDate as date,\n\t\tStandardDiscountPercentage as decimal(18,3),\n\t\tIsStatementSent as boolean,\n\t\tIsOnCreditHold as boolean,\n\t\tPaymentDays as integer,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tDeliveryRun as string,\n\t\tRunPosition as string,\n\t\tWebsiteURL as string,\n\t\tDeliveryAddressLine1 as string,\n\t\tDeliveryAddressLine2 as string,\n\t\tDeliveryPostalCode as string,\n\t\tDeliveryLocation as binary,\n\t\tPostalAddressLine1 as string,\n\t\tPostalAddressLine2 as string,\n\t\tPostalPostalCode as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> sourceCustomers\nsource(output(\n\t\tOrderLineID as integer,\n\t\tOrderID as integer,\n\t\tStockItemID as integer,\n\t\tDescription as string,\n\t\tPackageTypeID as integer,\n\t\tQuantity as integer,\n\t\tUnitPrice as decimal(18,2),\n\t\tTaxRate as decimal(18,3),\n\t\tPickedQuantity as integer,\n\t\tPickingCompletedWhen as timestamp,\n\t\tLastEditedBy as integer,\n\t\tLastEditedWhen as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> sourceOrderlines\nsource(output(\n\t\tInvoiceID as integer,\n\t\tCustomerID as integer,\n\t\tBillToCustomerID as integer,\n\t\tOrderID as integer,\n\t\tDeliveryMethodID as integer,\n\t\tContactPersonID as integer,\n\t\tAccountsPersonID as integer,\n\t\tSalespersonPersonID as integer,\n\t\tPackedByPersonID as integer,\n\t\tInvoiceDate as date,\n\t\tCustomerPurchaseOrderNumber as string,\n\t\tIsCreditNote as boolean,\n\t\tCreditNoteReason as string,\n\t\tComments as string,\n\t\tDeliveryInstructions as string,\n\t\tInternalComments as string,\n\t\tTotalDryItems as integer,\n\t\tTotalChillerItems as integer,\n\t\tDeliveryRun as string,\n\t\tRunPosition as string,\n\t\tReturnedDeliveryData as string,\n\t\tConfirmedDeliveryTime as timestamp,\n\t\tConfirmedReceivedBy as string,\n\t\tLastEditedBy as integer,\n\t\tLastEditedWhen as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> sourceInvoices\nsourceSales filter(toDate(LastEditedWhen) >= toDate($cutoff_time)) ~> Filter\nFilter, sourceCustomers join(sourceSales@CustomerID == sourceCustomers@CustomerID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1, sourceOrderlines join(sourceSales@OrderID == sourceOrderlines@OrderID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join2\nJoin2, sourceInvoices join(sourceSales@OrderID == sourceInvoices@OrderID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join3\nJoin3 derive({Total Excluding Tax} = Quantity * UnitPrice,\n\t\t{Tax Amount} = Quantity * UnitPrice * TaxRate,\n\t\t{Total Including Tax} = Quantity * UnitPrice * (1 - TaxRate)) ~> DerivedColumn1\nDerivedColumn1 sink(input(\n\t\t{Sale Staging Key} as long,\n\t\t{City Key} as integer,\n\t\t{Customer Key} as integer,\n\t\t{Bill To Customer Key} as integer,\n\t\t{Stock Item Key} as integer,\n\t\t{Invoice Date Key} as date,\n\t\t{Delivery Date Key} as date,\n\t\t{Salesperson Key} as integer,\n\t\t{WWI Invoice ID} as integer,\n\t\tDescription as string,\n\t\tPackage as string,\n\t\tQuantity as integer,\n\t\t{Unit Price} as decimal(18,2),\n\t\t{Tax Rate} as decimal(18,3),\n\t\t{Total Excluding Tax} as decimal(18,2),\n\t\t{Tax Amount} as decimal(18,2),\n\t\tProfit as decimal(18,2),\n\t\t{Total Including Tax} as decimal(18,2),\n\t\t{Total Dry Items} as integer,\n\t\t{Total Chiller Items} as integer,\n\t\t{WWI City ID} as integer,\n\t\t{WWI Customer ID} as integer,\n\t\t{WWI Bill To Customer ID} as integer,\n\t\t{WWI Stock Item ID} as integer,\n\t\t{WWI Salesperson ID} as integer,\n\t\t{Last Modified When} as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\t{City Key} = DeliveryCityID,\n\t\t{Customer Key} = sourceSales@CustomerID,\n\t\t{Bill To Customer Key} = BillToCustomerID,\n\t\t{Stock Item Key} = StockItemID,\n\t\t{Invoice Date Key} = InvoiceDate,\n\t\t{Delivery Date Key} = ConfirmedDeliveryTime,\n\t\t{Salesperson Key} = sourceSales@SalespersonPersonID,\n\t\t{WWI Invoice ID} = InvoiceID,\n\t\tDescription,\n\t\tPackage = PackageTypeID,\n\t\tQuantity,\n\t\t{Unit Price} = UnitPrice,\n\t\t{Tax Rate} = TaxRate,\n\t\t{Total Excluding Tax},\n\t\t{Tax Amount},\n\t\t{Total Including Tax},\n\t\t{WWI Bill To Customer ID} = sourceCustomers@BillToCustomerID,\n\t\t{WWI Stock Item ID} = StockItemID,\n\t\t{WWI Salesperson ID} = sourceSales@SalespersonPersonID\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sales_orders')]",
+				"[concat(variables('factoryId'), '/datasets/sales_customers')]",
+				"[concat(variables('factoryId'), '/datasets/sales_orderlines')]",
+				"[concat(variables('factoryId'), '/datasets/sales_invoices')]",
+				"[concat(variables('factoryId'), '/datasets/sale_staging')]"
+			]
+		}
+	]
+}
