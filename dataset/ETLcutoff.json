@@ -1,0 +1,29 @@
+{
+	"name": "ETLcutoff",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wwi_ODS",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ods"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Table Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cutoff Time",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "Integration",
+			"table": "ETL Cutoff"
+		}
+	}
+}
