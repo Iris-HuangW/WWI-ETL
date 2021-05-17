@@ -1,0 +1,12 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"parameters": {
+			"cutoff time": {
+				"type": "string",
+				"defaultValue": "'2000-01-01  00:00:00'"
+			}
+		},
+		"annotations": []
+	}
+}
