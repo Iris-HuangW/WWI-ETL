@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "pipeline_OLTP2ODS",
 	"properties": {
 		"activities": [
 			{
