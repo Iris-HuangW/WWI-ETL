@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"cutoff_time": {
-								"value": "'@{pipeline().parameters.p_cutoff_time}'",
+								"value": "'@{string(@pipeline().parameters.p_cutoff_time)}'",
 								"type": "Expression"
 							}
 						}
