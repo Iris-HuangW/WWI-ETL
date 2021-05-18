@@ -1,0 +1,35 @@
+{
+	"name": "ods_to_dw_sale",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ods_sale",
+						"type": "DatasetReference"
+					},
+					"name": "odsSale"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "fact_sale",
+						"type": "DatasetReference"
+					},
+					"name": "dwSale"
+				}
+			],
+			"transformations": [
+				{
+					"name": "salesKey"
+				},
+				{
+					"name": "lineageKey"
+				}
+			],
+			"script": "source(output(\n\t\t{Sale Staging Key} as long,\n\t\t{City Key} as integer,\n\t\t{Customer Key} as integer,\n\t\t{Bill To Customer Key} as integer,\n\t\t{Stock Item Key} as integer,\n\t\t{Invoice Date Key} as date,\n\t\t{Delivery Date Key} as date,\n\t\t{Salesperson Key} as integer,\n\t\t{WWI Invoice ID} as integer,\n\t\tDescription as string,\n\t\tPackage as string,\n\t\tQuantity as integer,\n\t\t{Unit Price} as decimal(18,2),\n\t\t{Tax Rate} as decimal(18,3),\n\t\t{Total Excluding Tax} as decimal(18,2),\n\t\t{Tax Amount} as decimal(18,2),\n\t\tProfit as decimal(18,2),\n\t\t{Total Including Tax} as decimal(18,2),\n\t\t{Total Dry Items} as integer,\n\t\t{Total Chiller Items} as integer,\n\t\t{WWI City ID} as integer,\n\t\t{WWI Customer ID} as integer,\n\t\t{WWI Bill To Customer ID} as integer,\n\t\t{WWI Stock Item ID} as integer,\n\t\t{WWI Salesperson ID} as integer,\n\t\t{Last Modified When} as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> odsSale\nodsSale keyGenerate(output({Sales Key} as long),\n\tstartAt: 1L) ~> salesKey\nsalesKey derive({Lineage Key} = 1) ~> lineageKey\nlineageKey sink(input(\n\t\t{Sale Key} as long,\n\t\t{City Key} as integer,\n\t\t{Customer Key} as integer,\n\t\t{Bill To Customer Key} as integer,\n\t\t{Stock Item Key} as integer,\n\t\t{Invoice Date Key} as date,\n\t\t{Delivery Date Key} as date,\n\t\t{Salesperson Key} as integer,\n\t\t{WWI Invoice ID} as integer,\n\t\tDescription as string,\n\t\tPackage as string,\n\t\tQuantity as integer,\n\t\t{Unit Price} as decimal(18,2),\n\t\t{Tax Rate} as decimal(18,3),\n\t\t{Total Excluding Tax} as decimal(18,2),\n\t\t{Tax Amount} as decimal(18,2),\n\t\tProfit as decimal(18,2),\n\t\t{Total Including Tax} as decimal(18,2),\n\t\t{Total Dry Items} as integer,\n\t\t{Total Chiller Items} as integer,\n\t\t{Lineage Key} as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\t{City Key},\n\t\t{Customer Key},\n\t\t{Bill To Customer Key},\n\t\t{Stock Item Key},\n\t\t{Invoice Date Key},\n\t\t{Delivery Date Key},\n\t\t{Salesperson Key},\n\t\t{WWI Invoice ID},\n\t\tDescription,\n\t\tPackage,\n\t\tQuantity,\n\t\t{Unit Price},\n\t\t{Tax Rate},\n\t\t{Total Excluding Tax},\n\t\t{Tax Amount},\n\t\tProfit,\n\t\t{Total Including Tax},\n\t\t{Total Dry Items},\n\t\t{Total Chiller Items},\n\t\t{Lineage Key}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> dwSale"
+		}
+	}
+}

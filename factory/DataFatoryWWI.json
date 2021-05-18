@@ -1,0 +1,9 @@
+{
+	"name": "DataFatoryWWI",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "00cced4a-a6e0-424a-9b1f-e974bfd11ff5",
+		"tenantId": "5b662374-14bc-4907-be17-dde52e3fe72c"
+	}
+}
