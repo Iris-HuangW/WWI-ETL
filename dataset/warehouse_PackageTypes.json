@@ -1,0 +1,44 @@
+{
+	"name": "warehouse_PackageTypes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "wwi_OLTP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "oltp"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "PackageTypeID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PackageTypeName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastEditedBy",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ValidFrom",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "ValidTo",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "Warehouse",
+			"table": "PackageTypes"
+		}
+	}
+}
